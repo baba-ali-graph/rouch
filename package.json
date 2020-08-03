@@ -1,0 +1,32 @@
+{
+  "name": "rouch",
+  "version": "1.0.0",
+  "description": "A simple library that generates React Components in its own directory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aleeycreative/rouch.git"
+  },
+  "bin": {
+    "rouch": "./index.js"
+  },
+  "keywords": [
+    "project-generator",
+    "react",
+    "frontend",
+    "development",
+    "node"
+  ],
+  "author": "Aleeycreative",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Aleeycreative/rouch/issues"
+  },
+  "homepage": "https://github.com/Aleeycreative/rouch#readme",
+  "dependencies": {
+    "inquirer": "^7.1.0"
+  }
+}
