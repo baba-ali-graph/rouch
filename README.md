@@ -1,14 +1,5 @@
-[![Version](https://img.shields.io/whtever)(link)]
-1. Description
-2. TOC
-N. others
---codeblocks
---description
-3. License
-4. Support
+# Rouch (A React Component generator)
+Rouch is a simple library that generates React components in their unique folder alongside other files like styles and test files. Rouch provides a CLI and it is highly customizable.
 
-
-SIdeNotes
-[What](#link)
-
-## [What](#id)
+## Status
+Under development
