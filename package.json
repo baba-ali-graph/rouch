@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/Aleeycreative/rouch#readme",
   "dependencies": {
+    "commander": "^5.1.0",
     "inquirer": "^7.1.0"
   }
 }

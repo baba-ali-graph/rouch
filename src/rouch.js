@@ -1,35 +1,27 @@
-const inquirer = require('inquirer')
+const parseInput = require('./parseInput')
+const launchInteractiveMode = require('./launchInteractiveMode')
+const generateTemplate = require('./generateTemplate')
+const {hasOptions} = require('./utilities')
 
-let rouch = () => {
-    const questions = generateQuestions()
-    inquirer.prompt(questions)
-    .then(handleAnswers)
-}
-
-function generateQuestions() {
-    return [
-        {
-            name: 'username',
-            type: 'input',
-            message: 'What is your username'
-        },
-        {
-            name: 'password',
-            type: 'password',
-            message: 'A secret something that you know !! :)'
-        },
-        {
-            name: 'gender',
-            type: 'list',
-            message: 'Monsiuer aur Madmosielle',
-            choices: ['male', 'female']
+async function rouch(){
+    let program = parseInput()
+    let options = {}
+    if(hasOptions(program)){
+        options = program.opts()
+        console.log(options)
+        generateTemplate(options)
+    }
+    else {
+        try {
+            options = await launchInteractiveMode()
+            generateTemplate(options)
+        } catch(e){
+            console.log(e)
         }
-    ]
+    }
+       
 }
 
-function handleAnswers(answers) {
-    console.log(`these are the answers that you supplied!! haha \n`)
-    console.dir(answers)
-}
+
 
 module.exports = rouch
