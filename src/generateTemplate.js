@@ -5,11 +5,10 @@ const fs = require('fs')
 const chalk = require('chalk')
 
 module.exports = function(options = {}){
-    let {filename, path, template } = options
+    let {filename, path, template, overwrite} = options
     console.log(`the path: ${path}`)
     let componentFolderObj = generateFilesContents(filename)
-    debugprint(componentFolderObj, 'green')
-    writeContentsToPath(componentFolderObj, path, filename)
+    writeContentsToPath(componentFolderObj, path, filename, overwrite)
 }
 
 function generateFilesContents(name, templateType){
@@ -17,7 +16,7 @@ function generateFilesContents(name, templateType){
     let pkgJsonFileContents = pkgJsonTemplate(name)
     let sassFileContents = sassTemplate(name)
     let testFileContents = testTemplate(name)
-    let componentFolderObj = {jsFileContents}
+    let componentFolderObj = {jsFileContents, pkgJsonFileContents}
 
     if (templateType === templateTypes[0]) {
         componentFolderObj = {...componentFolder, testFileContents}
@@ -32,32 +31,70 @@ function generateFilesContents(name, templateType){
 }
 
 
-function writeContentsToPath(contents, pathTo, name) {
+function writeContentsToPath(contents, pathTo, name, overwrite) {
     let writePath = path.resolve(process.cwd(), pathTo, name)
     debugprint(writePath)
-    for(let key in contents) {
-        let [extension, ...matchArray] = key.match(/js|test|sass/)
-        let done = fs.mkdirSync(writePath, {recursive:true})
-        if(done){
-            let fileWritePath = path.resolve(writePath,`${name}.${extension}`)
+    try {
+        let done = createDirectory(writePath, overwrite)
+        for(let key in contents) {
+            let [extension, ...matchArray] = key.match(/js|test|sass|pkgjson/i)
+            debugprint(extension, "green")
+            let filename = extension === "pkgJson" ? "package.json" : `${name}.${extension}`
+            let fileWritePath = path.resolve(writePath, filename)
             console.log(extension)
             console.log(fileWritePath)
             fs.writeFileSync(fileWritePath, contents[key])
-        }
-        else debugprint(`can't print information`)
-        
+            }
+        debugprint(`done: ${name} created !`,'green')
+        return true
+    } catch(e) {
+        handleErrors(e)
     }
-    debugprint(`done: ${name} created !`,'green')
 }
     
 function debugprint(s, color="red"){
     console.log(chalk[color].bold(s))
 }
     
+function createDirectory(writePath, overwrite) {
+    if(fs.existsSync(writePath)) {
+         if(overwrite === true) {
+             throw new Error("FILE_EXISTS")
+         }
+         deleteDirectory(writePath)
+    }
+    fs.mkdirSync(writePath, {recursive: true})
+    return true
+}
+
+function deleteDirectory(dirPath) {
+    let dirContents = fs.readdirSync(dirPath)
+    console.log(dirContents)
+    if(dirContents.length < 1) {
+        fs.rmdir(writePath)
+        return
+    }
+    for (let content of dirContents){
+        let fullPath = path.join(dirPath, content)
+        if(fs.lstatSync(fullPath).isDirectory()){
+            deleteDirectory(fullPath)
+        }
+        else {
+            fs.unlinkSync(fullPath)
+        }
+    }
+    fs.rmdirSync(dirPath)
+}
 
 
 
 
-
-
-
+function handleErrors(e) {
+    console.log(e)
+    switch(e){
+        case "FILE_EXISTS":
+            debugprint("It seems the folder already exists in this location, -o overwrites the directory")
+        default:
+            debugprint("An error occured")
+    }
+}
