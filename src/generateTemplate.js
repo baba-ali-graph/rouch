@@ -4,27 +4,26 @@ const path = require('path')
 const fs = require('fs')
 const chalk = require('chalk')
 
-module.exports = function(options = {}){
-    let {filename, path, template, overwrite} = options
-    console.log(`the path: ${path}`)
-    let componentFolderObj = generateFilesContents(filename)
-    writeContentsToPath(componentFolderObj, path, filename, overwrite)
+module.exports = function(options){
+    let {name, path, template, overwrite} = options
+    let componentFolderObj = generateFilesContents(name, template)
+    writeContentsToPath(componentFolderObj, path, name, overwrite)
 }
 
-function generateFilesContents(name, templateType){
+function generateFilesContents(name, template){
     let jsFileContents = jsTemplate(name)
     let pkgJsonFileContents = pkgJsonTemplate(name)
     let sassFileContents = sassTemplate(name)
     let testFileContents = testTemplate(name)
     let componentFolderObj = {jsFileContents, pkgJsonFileContents}
 
-    if (templateType === templateTypes[0]) {
+    if (template === 0) {
         componentFolderObj = {...componentFolder, testFileContents}
     }
-    else if (templateType === templateTypes[1]) {
+    else if (template === 1) {
         componentFolderObj = {...componentFolder, testFileContents, sassFileContents}
     }
-    else if (templateType === templateTypes[2]) {
+    else if (template === 2) {
         componentFolderObj = {...componentFolder, sassFileContents} 
     }
     return componentFolderObj

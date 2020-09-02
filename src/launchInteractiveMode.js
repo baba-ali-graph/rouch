@@ -3,11 +3,8 @@ const flavours = require('./templateTypes')
 
 async function launchInteractiveMode(){
     const questions = generateQuestions()
-    try {
-        let answers =  inquirer.prompt(questions)
-    } catch(err) {
-        console.err(err)
-    }
+    let answers =  await inquirer.prompt(questions)
+    return answers
 }
 
 function generateQuestions() {
@@ -32,14 +29,5 @@ function generateQuestions() {
     ]
 }
 
-function handleAnswers(answers) {
-    console.log(`these are the answers that you supplied!! haha \n`)
-    console.dir(answers)
-    return answers
-}
-
-function handleErrors(err){
-    console.err(err)
-}
 
 module.exports = launchInteractiveMode

@@ -5,7 +5,6 @@ const {hasOptions} = require('./utilities')
 
 async function rouch(){
     let program = parseInput()
-    let options = {}
     if(hasOptions(program)){
         options = program.opts()
         console.log(options)
@@ -13,7 +12,7 @@ async function rouch(){
     }
     else {
         try {
-            options = await launchInteractiveMode()
+            let options = await launchInteractiveMode()
             generateTemplate(options)
         } catch(e){
             console.log(e)
