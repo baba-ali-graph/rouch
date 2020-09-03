@@ -17,14 +17,14 @@ function generateFilesContents(name, template){
     let testFileContents = testTemplate(name)
     let componentFolderObj = {jsFileContents, pkgJsonFileContents}
 
-    if (template === 0) {
-        componentFolderObj = {...componentFolder, testFileContents}
+    if (template === templateTypes[0]) {
+        componentFolderObj = {...componentFolderObj, testFileContents}
     }
-    else if (template === 1) {
-        componentFolderObj = {...componentFolder, testFileContents, sassFileContents}
+    else if (template === templateTypes[1]) {
+        componentFolderObj = {...componentFolderObj, testFileContents, sassFileContents}
     }
-    else if (template === 2) {
-        componentFolderObj = {...componentFolder, sassFileContents} 
+    else if (template === templateTypes[2]) {
+        componentFolderObj = {...componentFolderObj, sassFileContents} 
     }
     return componentFolderObj
 }
@@ -32,7 +32,6 @@ function generateFilesContents(name, template){
 
 function writeContentsToPath(contents, pathTo, name, overwrite) {
     let writePath = path.resolve(process.cwd(), pathTo, name)
-    debugprint(writePath)
     try {
         let done = createDirectory(writePath, overwrite)
         for(let key in contents) {
@@ -40,11 +39,9 @@ function writeContentsToPath(contents, pathTo, name, overwrite) {
             debugprint(extension, "green")
             let filename = extension === "pkgJson" ? "package.json" : `${name}.${extension}`
             let fileWritePath = path.resolve(writePath, filename)
-            console.log(extension)
-            console.log(fileWritePath)
             fs.writeFileSync(fileWritePath, contents[key])
             }
-        debugprint(`done: ${name} created !`,'green')
+        // debugprint(`done: ${name} created !`,'green')
         return true
     } catch(e) {
         handleErrors(e)

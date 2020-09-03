@@ -10,7 +10,7 @@ async function launchInteractiveMode(){
 function generateQuestions() {
     return [
         {
-            name: 'filename',
+            name: 'name',
             type: 'input',
             message: 'Name for component files: '
         },
@@ -22,7 +22,7 @@ function generateQuestions() {
         },
         {
             name: 'template',
-            type: 'list',
+            type: 'rawlist',
             message: 'What template do you want ?',
             choices: flavours
         }
