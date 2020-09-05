@@ -1,96 +1,97 @@
-const  {jsTemplate, pkgJsonTemplate, sassTemplate, testTemplate} = require('./utilities/template')
+const  {jsTemplate, pkgJsonTemplate, styleTemplate, testTemplate} = require('./utilities/template')
 const templateTypes = require('./templateTypes')
-const path = require('path')
+const Path = require('path')
 const fs = require('fs')
 const chalk = require('chalk')
 
 module.exports = function(options){
-    let {name, path, template, overwrite} = options
-    let componentFolderObj = generateFilesContents(name, template)
-    writeContentsToPath(componentFolderObj, path, name, overwrite)
-}
-
-function generateFilesContents(name, template){
-    let jsFileContents = jsTemplate(name)
-    let pkgJsonFileContents = pkgJsonTemplate(name)
-    let sassFileContents = sassTemplate(name)
-    let testFileContents = testTemplate(name)
-    let componentFolderObj = {jsFileContents, pkgJsonFileContents}
-
-    if (template === templateTypes[0]) {
-        componentFolderObj = {...componentFolderObj, testFileContents}
-    }
-    else if (template === templateTypes[1]) {
-        componentFolderObj = {...componentFolderObj, testFileContents, sassFileContents}
-    }
-    else if (template === templateTypes[2]) {
-        componentFolderObj = {...componentFolderObj, sassFileContents} 
-    }
-    return componentFolderObj
-}
-
-
-function writeContentsToPath(contents, pathTo, name, overwrite) {
-    let writePath = path.resolve(process.cwd(), pathTo, name)
-    try {
-        let done = createDirectory(writePath, overwrite)
-        for(let key in contents) {
-            let [extension, ...matchArray] = key.match(/js|test|sass|pkgjson/i)
-            debugprint(extension, "green")
-            let filename = extension === "pkgJson" ? "package.json" : `${name}.${extension}`
-            let fileWritePath = path.resolve(writePath, filename)
-            fs.writeFileSync(fileWritePath, contents[key])
-            }
-        // debugprint(`done: ${name} created !`,'green')
-        return true
+    try{
+        const {path, name, overwrite} = options
+        const directoryPath = createDirectory(path,name,overwrite)
+        createTemplateFiles(directoryPath, options)
+        console.log(chalk.blue(`\n\n********************** Done :) **********************`))
     } catch(e) {
-        handleErrors(e)
+        console.error(chalk.red(e.message))
     }
 }
-    
-function debugprint(s, color="red"){
-    console.log(chalk[color].bold(s))
-}
-    
-function createDirectory(writePath, overwrite) {
-    if(fs.existsSync(writePath)) {
-         if(overwrite === true) {
-             throw new Error("FILE_EXISTS")
-         }
-         deleteDirectory(writePath)
+
+
+function createDirectory(path, name, overwrite) {
+    let dirPath = Path.resolve(path, name)
+    if(fs.existsSync(dirPath)){
+        if(overwrite)
+            deleteDirectory(dirPath)
+        else throw new Error("Directory already exists !")
     }
-    fs.mkdirSync(writePath, {recursive: true})
-    return true
+    fs.mkdirSync(dirPath, {recursive: true})
+    return dirPath
 }
+
 
 function deleteDirectory(dirPath) {
-    let dirContents = fs.readdirSync(dirPath)
-    console.log(dirContents)
-    if(dirContents.length < 1) {
-        fs.rmdir(writePath)
-        return
-    }
-    for (let content of dirContents){
-        let fullPath = path.join(dirPath, content)
-        if(fs.lstatSync(fullPath).isDirectory()){
-            deleteDirectory(fullPath)
-        }
-        else {
-            fs.unlinkSync(fullPath)
+    const contents = fs.readdirSync(dirPath)
+    if(contents.length < 1)
+        fs.rmdirSync(dirPath)
+    else {
+        for (let content of contents){
+            let fullContentPath = Path.resolve(dirPath, content)
+            if(fs.lstatSync(fullContentPath).isDirectory())
+                deleteDirectory(fullContentPath)
+            else fs.unlinkSync(fullContentPath)
         }
     }
-    fs.rmdirSync(dirPath)
+}
+
+function createTemplateFiles(dirPath, options) {
+    let extensions = ['.js','.json']
+    extensions = updateExtensions(extensions, options)
+    for(let extension of extensions){
+        writeTemplate(dirPath,extension, options)
+    }
 }
 
 
+function updateExtensions(extensions, options) {
+    if(options.test)
+        extensions.push('.test.js')
+    if(options.style)
+        extensions.push(`.${options.style}`)
+    return extensions
+}
 
 
-function handleErrors(e) {
-    console.log(e)
-    switch(e){
-        case "FILE_EXISTS":
-            debugprint("It seems the folder already exists in this location, -o overwrites the directory")
+function writeTemplate(dirPath, extension, {name}){
+    let fileContents, writePath, filename
+    switch(extension){
+        case '.js':
+            filename = `${name}${extension}`
+            writePath = Path.resolve(dirPath,filename)
+            fileContents = jsTemplate(name)
+            break
+        case '.json':
+            filename = "package.json"
+            writePath = Path.resolve(dirPath, filename)
+            fileContents = pkgJsonTemplate(name)
+            break
+        case '.test.js':
+            filename = `${name}${extension}`
+            writePath = Path.resolve(dirPath, filename)
+            fileContents = testTemplate(name)
+            break
+        case '.sass':
+        case '.css':
+        case '.less':
+        case '.styl':
+        case '.scss':
+            filename = `${name.toLowerCase()}${extension}`
+            writePath = Path.resolve(dirPath, filename)
+            fileContents = styleTemplate(name, extension)
+            break
         default:
-            debugprint("An error occured")
+            throw new Error("Unrecognized file type")
+
     }
+    console.log(chalk.blue("Generated "), filename)
+    fs.writeFileSync(writePath, fileContents)
+    return
 }

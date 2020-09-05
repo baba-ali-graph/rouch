@@ -18,7 +18,7 @@ exports.pkgJsonTemplate = (componentName = "----") => `
 }
 `
 
-exports.sassTemplate = (componentName = "-----") => `
+exports.styleTemplate = (componentName = "-----") => `
 .${componentName}
 
 `

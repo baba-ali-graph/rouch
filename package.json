@@ -2,7 +2,7 @@
   "name": "rouch",
   "version": "1.0.0",
   "description": "A simple library that generates React Components in its own directory",
-  "main": "index.js",
+  "main": "./src/execute.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/Aleeycreative/rouch.git"
   },
   "bin": {
-    "rouch": "./index.js"
+    "rouch": "./rouch.js"
   },
   "keywords": [
     "project-generator",
