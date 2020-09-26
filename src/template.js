@@ -1,6 +1,5 @@
-exports.jsTemplate = (componentName = "-----") => `
-import React from 'react'
-
+exports.jsTemplate = function (componentName = "-----") {
+return `import React from 'react'
 function ${componentName}(){
     
     return(
@@ -11,21 +10,23 @@ function ${componentName}(){
 
 export default ${componentName}
 `
+}
 
-exports.pkgJsonTemplate = (componentName = "----") => `
-{
+exports.pkgJsonTemplate = function (componentName = "----") {
+return `{
     "main": "./${componentName}"
 }
 `
+}
 
-exports.styleTemplate = (componentName = "-----") => `
-.${componentName}
+exports.styleTemplate = function (componentName = "-----") {
+return `.${componentName}`
+}
 
-`
-
-exports.testTemplate = (componentName = "-----") => `
-import ${componentName} from './componentName'
+exports.testTemplate = function (componentName = "-----") {
+return `import ${componentName} from './componentName'
 describe('it renders successfully', () => {
     let wrapper = shallow(<App/>)
 })
 `
+}

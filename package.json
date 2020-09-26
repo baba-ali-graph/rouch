@@ -11,7 +11,7 @@
     "url": "git+https://github.com/Aleeycreative/rouch.git"
   },
   "bin": {
-    "rouch": "./rouch.js"
+    "rouch": "./index.js"
   },
   "keywords": [
     "project-generator",

@@ -1,5 +1,4 @@
-const  {jsTemplate, pkgJsonTemplate, styleTemplate, testTemplate} = require('./utilities/template')
-const templateTypes = require('./templateTypes')
+const  {jsTemplate, pkgJsonTemplate, styleTemplate, testTemplate} = require('./template')
 const Path = require('path')
 const fs = require('fs')
 const chalk = require('chalk')
@@ -9,7 +8,7 @@ module.exports = function(options){
         const {path, name, overwrite} = options
         const directoryPath = createDirectory(path,name,overwrite)
         createTemplateFiles(directoryPath, options)
-        console.log(chalk.blue(`\n\n********************** Done :) **********************`))
+        console.log(chalk.blue(`\nDone :) `))
     } catch(e) {
         console.error(chalk.red(e.message))
     }
