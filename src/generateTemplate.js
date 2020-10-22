@@ -87,7 +87,7 @@ function writeTemplate(dirPath, extension, {name}){
             fileContents = styleTemplate(name, extension)
             break
         default:
-            throw new Error("Unrecognized file type")
+            throw new Error(`${extension.split(".")[1]}: Unrecognized file extension`)
 
     }
     console.log(chalk.blue("Generated "), filename)
