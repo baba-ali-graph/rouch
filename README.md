@@ -29,7 +29,7 @@ This would generate the following files in the folder `src/components/Dashboard`
 Generally, the syntax is:
 
 ```
-rouch <path> <componentName> [options]
+rouch [options] <path> <componentName> 
 ```
 
 ## ARGUMENTS
@@ -43,7 +43,9 @@ Rouch takes only two  important arguments:
 
 `-s=value --style=value` : This option specifies the extension of the style file that would be generated. It could be  `css`, `sass`,`scss`, `less` or `stylus`
 
-`-t --test`: If present, test script template would be generated otherwise not.
+`-t --test`: If supplied, a template file for possible test scripts would be generated too.
+
+`-o --overwrite`: If supplied, this option would make `rouch` ovewrite an existing directory.
 
 ## CONTRIBUTION
 If you have any cool ideas, I'm game.
