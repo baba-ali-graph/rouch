@@ -1,3 +1,5 @@
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/AleeyCreative/rouch)
+
 # Rouch (Touch for React Components)
 Rouch is a simple library that generates React components in folders along with (optional) styles and test script template. Rouch provides a CLI that is very easy to use.
 
